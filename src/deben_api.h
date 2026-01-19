@@ -8,6 +8,8 @@ struct MLData{
     float confidence;
     float predictedLoad;
     float strainRate;
+    float predictedExtension;
+    float predictedDisplacement;
 };
 
 //This struct is currently unused, but will likely be implemented in further iterations.
@@ -30,6 +32,7 @@ class DebenAPI{
 
     void gotoload(double);
     void gotoExtension(double);
+    void gotoDisplacement(double);
 };
 
 void Bridging(MLData&);
