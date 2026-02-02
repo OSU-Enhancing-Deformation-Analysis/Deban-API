@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <limits>
 #include "deben_api.h"
 
 using namespace std;
@@ -63,21 +64,57 @@ void humanInput(MLData& TheData){
     float humaninput;
     int extraInput;
     if(TheData.predictedLoad > safetyLimit){
-        cout << "The current load exceeds the safety limit, asking for manual load: ";
-        cin >> humaninput;
+        while(true){
+            cout << "The current load exceeds the safety limit, asking for manual load: ";
+            cin >> humaninput;
+            if(cin.fail() || humaninput > 200){
+                cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else break;
+        }
         TheData.predictedLoad = humaninput;
     }
-    cout << "Do you wish to have (1-manually add inputs, 2-Automatic, 3-Human Confirming)? ";
-    cin >> extraInput;
+    while(true){
+        cout << "Do you wish to have (1-manually add inputs, 2-Automatic, 3-Human Confirming)? ";
+        cin >> extraInput;
+        if(cin.fail()||extraInput > 3||extraInput < 1){
+            cout << "Invalid input. Please enter a valid integer.\n" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else break;
+
+    }
     if(extraInput == 1){
-        cout << "Please enter the appropriate load: ";
-        cin >> humaninput;
+        while(true){
+            cout << "Please enter the appropriate load: ";
+            cin >> humaninput;
+            if(cin.fail()|humaninput > 200){
+                cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else break;
+        }
         TheData.predictedLoad = humaninput;
-        cout << "Please enter the appropriate extension: ";
-        cin >> humaninput;
+        while(true){
+            cout << "Please enter the appropriate extension: ";
+            cin >> humaninput;
+            if(cin.fail() || humaninput > 200){
+                cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else break;
+        }
         TheData.predictedExtension = humaninput;
-        cout << "Please enter the appropriate displacement: ";
-        cin >> humaninput;
+        while(true){
+            cout << "Please enter the appropriate displacement: ";
+            cin >> humaninput;
+            if(cin.fail() || humaninput > 200){
+                cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else break;
+        }
         TheData.predictedDisplacement = humaninput;
     }
     else if(extraInput == 2){
@@ -90,28 +127,71 @@ void humanInput(MLData& TheData){
         TheData.predictedLoad = 10;
         TheData.predictedExtension = 10;
 
-        cout << "Does " << TheData.predictedDisplacement << " for displacement work?"
-             << "(1 for yes and 0 for no): ";
-        cin >> humaninput;
-        if(!humaninput){
-            cout << "Please enter the appropriate displacement: ";
+        while(true){
+            cout << "Does " << TheData.predictedDisplacement << " for displacement work?"
+                 << "(1 for yes and 0 for no): ";
             cin >> humaninput;
+            if(cin.fail() && (humaninput == 1 || humaninput == 0)){
+                cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else break;
+        }
+        if(!humaninput){
+            while(true){
+                cout << "Please enter the appropriate displacement: ";
+                cin >> humaninput;
+                if(cin.fail() || humaninput > 200){
+                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                } else break;
+            }
+
             TheData.predictedDisplacement = humaninput;
         }
-        cout << "Does " << TheData.predictedExtension << " for extension work?"
-             << "(1 for yes and 0 for no): ";
-        cin >> humaninput;
+            while(true){
+                cout << "Does " << TheData.predictedExtension << " for extension work?"
+                     << "(1 for yes and 0 for no): ";
+                cin >> humaninput;
+                if(cin.fail() && (humaninput == 1 || humaninput == 0)){
+                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                } else break;
+            }
         if(!humaninput){
-            cout << "Please enter the appropriate value: ";
-            cin >> humaninput;
+            while(true){
+                cout << "Please enter the appropriate value: ";
+                cin >> humaninput;
+                if(cin.fail() || humaninput > 200){
+                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                } else break;
+            }
             TheData.predictedExtension = humaninput;
         }
-        cout << "Does " << TheData.predictedLoad << " for load work?"
-             << "(1 for yes and 0 for no): ";
-        cin >> humaninput;
-        if(!humaninput){
-            cout << "Please enter the appropriate value: ";
+        while(true){
+            cout << "Does " << TheData.predictedLoad << " for load work?"
+                << "(1 for yes and 0 for no): ";
             cin >> humaninput;
+            if(cin.fail() && (humaninput == 1 || humaninput == 0)){
+                cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else break;
+        }
+        if(!humaninput){
+            while(true){
+                cout << "Please enter the appropriate value: ";
+                cin >> humaninput;
+                if(cin.fail() || humaninput > 200){
+                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                } else break;
+            }
             TheData.predictedLoad = humaninput;
         }
     }
