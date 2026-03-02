@@ -1,40 +1,37 @@
 #ifndef DEBEN_API_H
 #define DEBEN_API_H
+
 #include <string>
-#include <vector>
 
-//Struct to make the data more apparent.
-struct MLData{
-    float confidence;
-    float predictedLoad;
-    float strainRate;
-    float predictedExtension;
-    float predictedDisplacement;
+struct MLData {
+    float confidence = 0.0f;
+    float predictedLoad = 0.0f;
+    float strainRate = 0.0f;
+    float predictedExtension = 0.0f;
+    float predictedDisplacement = 0.0f;
 };
 
-//This struct is currently unused, but will likely be implemented in further iterations.
-struct HumanInput{
-    int InputAutomation;
+struct HumanInput {
+    int InputAutomation = 0;
 };
 
-//Class for the DebenAPI
-//TODO: Actually acquire the DebenAPI at some point, so that we can then directly implement in this class.
-class DebenAPI{
-    public:
+class DebenAPI {
+public:
     bool connect();
     void disconnect();
     bool startMotor();
     void stopMotor();
-    
+
     double getForce();
     double getExtension();
     double getPosition();
 
-    void gotoload(double);
-    void gotoExtension(double);
-    void gotoDisplacement(double);
+    void gotoload(double load);
+    void gotoExtension(double mm);
+    void gotoDisplacement(double d);
 };
 
-void Bridging(MLData&);
-void humanInput(MLData&);
+bool Bridging(MLData& values, const std::string& path);
+void humanInput(MLData& data);
+
 #endif

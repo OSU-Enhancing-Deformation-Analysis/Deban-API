@@ -1,198 +1,160 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <string>
 #include "deben_api.h"
 
-using namespace std;
+namespace {
 
+float readFloatInRange(const std::string& prompt, float minValue, float maxValue) {
+    float value = 0.0f;
+    while (true) {
+        std::cout << prompt;
+        std::cin >> value;
 
-//Class methods - Deben
-bool DebenAPI::connect(){
-    cout << "[MOCK] Connect\n"; 
+        if (std::cin.fail() || value < minValue || value > maxValue) {
+            std::cout << "Invalid input. Please enter a valid value.\n\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        return value;
+    }
+}
+
+int readIntChoice(const std::string& prompt, int minValue, int maxValue) {
+    int value = 0;
+    while (true) {
+        std::cout << prompt;
+        std::cin >> value;
+
+        if (std::cin.fail() || value < minValue || value > maxValue) {
+            std::cout << "Invalid input. Please enter a valid integer.\n\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        return value;
+    }
+}
+
+bool readYesNo(const std::string& prompt) {
+    int choice = readIntChoice(prompt, 0, 1);
+    return choice == 1;
+}
+
+void enforceSafetyLimit(float& load, float safetyLimit) {
+    if (load <= safetyLimit) return;
+
+    load = readFloatInRange(
+        "The current load exceeds the safety limit, asking for manual load: ",
+        0.0f,
+        safetyLimit
+    );
+}
+
+void confirmOrEdit(const std::string& label, float& value, float minValue, float maxValue) {
+    std::string prompt = "Does " + std::to_string(value) + " for " + label + " work? (1 for yes and 0 for no): ";
+    bool ok = readYesNo(prompt);
+    if (ok) return;
+
+    std::string editPrompt = "Please enter the appropriate " + label + ": ";
+    value = readFloatInRange(editPrompt, minValue, maxValue);
+}
+
+} 
+
+bool DebenAPI::connect() {
+    std::cout << "[MOCK] Connect\n";
     return true;
 }
 
-void DebenAPI::disconnect(){
-    cout << "[MOCK] DisConnect\n";
+void DebenAPI::disconnect() {
+    std::cout << "[MOCK] DisConnect\n";
 }
 
-bool DebenAPI::startMotor(){
-    cout << "[MOCK] Motor Start\n";
+bool DebenAPI::startMotor() {
+    std::cout << "[MOCK] Motor Start\n";
     return true;
 }
 
-void DebenAPI::stopMotor(){
-    cout << "[MOCK] Motor Stop\n";
+void DebenAPI::stopMotor() {
+    std::cout << "[MOCK] Motor Stop\n";
 }
 
-double DebenAPI::getForce(){
+double DebenAPI::getForce() {
     return 42.8;
 }
 
-double DebenAPI::getExtension(){
+double DebenAPI::getExtension() {
     return 3.14;
 }
 
-double DebenAPI::getPosition(){
+double DebenAPI::getPosition() {
     return 0.92;
 }
 
-void DebenAPI::gotoload(double load){
-    cout << "[MOCK] GoTo Load: " << load << endl;
+void DebenAPI::gotoload(double load) {
+    std::cout << "[MOCK] GoTo Load: " << load << "\n";
 }
 
-void DebenAPI::gotoExtension(double mm){
-    cout << "[MOCK] GoTo Extension: " << mm << endl;
+void DebenAPI::gotoExtension(double mm) {
+    std::cout << "[MOCK] GoTo Extension: " << mm << "\n";
 }
 
-void DebenAPI::gotoDisplacement(double d){
-    cout << "[MOCK] GoTo Displacement: " << d << endl;
+void DebenAPI::gotoDisplacement(double d) {
+    std::cout << "[MOCK] GoTo Displacement: " << d << "\n";
 }
 
-//Function to get the data from the python script, which will contain the ML data output. 
-void Bridging(MLData& values){
-    ifstream file("data.txt");
+bool Bridging(MLData& values, const std::string& path) {
+    std::ifstream file(path);
     if (!file) {
-        cerr << "Error: Could not open file.\n";
+        std::cerr << "Error: Could not open file.\n";
+        return false;
     }
-    file >> values.confidence >> values.predictedLoad >> values.strainRate;
+
+    if (!(file >> values.confidence >> values.predictedLoad >> values.strainRate)) {
+        std::cerr << "Error: Could not parse ML data.\n";
+        return false;
+    }
+
+    return true;
 }
 
-void humanInput(MLData& TheData){
-    float safetyLimit = 200;
-    float targetLoad, targetDisplacement, targetExtension;
-    float humaninput;
-    int extraInput;
-    if(TheData.predictedLoad > safetyLimit){
-        while(true){
-            cout << "The current load exceeds the safety limit, asking for manual load: ";
-            cin >> humaninput;
-            if(cin.fail() || humaninput > 200){
-                cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            } else break;
-        }
-        TheData.predictedLoad = humaninput;
-    }
-    while(true){
-        cout << "Do you wish to have (1-manually add inputs, 2-Automatic, 3-Human Confirming)? ";
-        cin >> extraInput;
-        if(cin.fail()||extraInput > 3||extraInput < 1){
-            cout << "Invalid input. Please enter a valid integer.\n" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        } else break;
+void humanInput(MLData& data) {
+    const float safetyLimit = 200.0f;
+    const float minValue = 0.0f;
+    const float maxValue = 200.0f;
 
-    }
-    if(extraInput == 1){
-        while(true){
-            cout << "Please enter the appropriate load: ";
-            cin >> humaninput;
-            if(cin.fail()|humaninput > 200){
-                cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            } else break;
-        }
-        TheData.predictedLoad = humaninput;
-        while(true){
-            cout << "Please enter the appropriate extension: ";
-            cin >> humaninput;
-            if(cin.fail() || humaninput > 200){
-                cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            } else break;
-        }
-        TheData.predictedExtension = humaninput;
-        while(true){
-            cout << "Please enter the appropriate displacement: ";
-            cin >> humaninput;
-            if(cin.fail() || humaninput > 200){
-                cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            } else break;
-        }
-        TheData.predictedDisplacement = humaninput;
-    }
-    else if(extraInput == 2){
-        TheData.predictedDisplacement = 10;
-        TheData.predictedLoad = 10;
-        TheData.predictedExtension = 10;
-    }
-    else{
-        TheData.predictedDisplacement = 10;
-        TheData.predictedLoad = 10;
-        TheData.predictedExtension = 10;
+    enforceSafetyLimit(data.predictedLoad, safetyLimit);
 
-        while(true){
-            cout << "Does " << TheData.predictedDisplacement << " for displacement work?"
-                 << "(1 for yes and 0 for no): ";
-            cin >> humaninput;
-            if(cin.fail() && (humaninput == 1 || humaninput == 0)){
-                cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            } else break;
-        }
-        if(!humaninput){
-            while(true){
-                cout << "Please enter the appropriate displacement: ";
-                cin >> humaninput;
-                if(cin.fail() || humaninput > 200){
-                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                } else break;
-            }
+    int mode = readIntChoice(
+        "Do you wish to have (1 manually add inputs, 2 Automatic, 3 Human Confirming)? ",
+        1,
+        3
+    );
 
-            TheData.predictedDisplacement = humaninput;
-        }
-            while(true){
-                cout << "Does " << TheData.predictedExtension << " for extension work?"
-                     << "(1 for yes and 0 for no): ";
-                cin >> humaninput;
-                if(cin.fail() && (humaninput == 1 || humaninput == 0)){
-                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                } else break;
-            }
-        if(!humaninput){
-            while(true){
-                cout << "Please enter the appropriate value: ";
-                cin >> humaninput;
-                if(cin.fail() || humaninput > 200){
-                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                } else break;
-            }
-            TheData.predictedExtension = humaninput;
-        }
-        while(true){
-            cout << "Does " << TheData.predictedLoad << " for load work?"
-                << "(1 for yes and 0 for no): ";
-            cin >> humaninput;
-            if(cin.fail() && (humaninput == 1 || humaninput == 0)){
-                cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            } else break;
-        }
-        if(!humaninput){
-            while(true){
-                cout << "Please enter the appropriate value: ";
-                cin >> humaninput;
-                if(cin.fail() || humaninput > 200){
-                    cout << "Invalid input. Please enter a valid integer.\n" << endl;
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                } else break;
-            }
-            TheData.predictedLoad = humaninput;
-        }
+    if (mode == 1) {
+        data.predictedLoad = readFloatInRange("Please enter the appropriate load: ", minValue, maxValue);
+        data.predictedExtension = readFloatInRange("Please enter the appropriate extension: ", minValue, maxValue);
+        data.predictedDisplacement = readFloatInRange("Please enter the appropriate displacement: ", minValue, maxValue);
+        return;
     }
+
+    if (mode == 2) {
+        data.predictedDisplacement = 10.0f;
+        data.predictedLoad = 10.0f;
+        data.predictedExtension = 10.0f;
+        return;
+    }
+
+    data.predictedDisplacement = 10.0f;
+    data.predictedLoad = 10.0f;
+    data.predictedExtension = 10.0f;
+
+    confirmOrEdit("displacement", data.predictedDisplacement, minValue, maxValue);
+    confirmOrEdit("extension", data.predictedExtension, minValue, maxValue);
+    confirmOrEdit("load", data.predictedLoad, minValue, safetyLimit);
+
+    enforceSafetyLimit(data.predictedLoad, safetyLimit);
 }
