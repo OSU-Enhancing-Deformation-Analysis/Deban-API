@@ -1,28 +1,35 @@
 #include <iostream>
-#include "deben_api.h"
 
-int main() {
-    DebenAPI api;
-    MLData data;
+#include "DebenController.h"
+#include "Menu.h"
 
-    if (!Bridging(data, "data.txt")) {
+int main()
+{
+    std::cout << "Attempting to load DLL...\n";
+
+    DebenController controller;
+    controller.setSafeLoadRange(0.0, 25.0);
+
+    if (!controller.loadLibrary(L"External control DLL/DebenMT64.dll"))
+    {
+        std::cout << controller.getLastErrorMessage() << "\n";
         return 1;
     }
 
-    std::cout
-        << "Confidence: " << data.confidence << "\n"
-        << "Predicted Load: " << data.predictedLoad << "\n"
-        << "Strain: " << data.strainRate << "\n\n";
+    std::cout << "Library loaded successfully.\n";
 
-    humanInput(data);
+    if (!controller.connectDevice())
+    {
+        std::cout << controller.getLastErrorMessage() << "\n";
+        return 1;
+    }
 
-    api.connect();
-    api.startMotor();
-    api.gotoload(data.predictedLoad);
-    api.gotoDisplacement(data.predictedDisplacement);
-    api.gotoExtension(data.predictedExtension);
-    api.stopMotor();
-    api.disconnect();
+    std::cout << "Connected to Deben controller.\n";
+    std::cout << "Initial force: " << controller.getForce() << " N\n";
 
+    Menu menu(controller);
+    menu.run();
+
+    std::cout << "Shutting down cleanly.\n";
     return 0;
 }
