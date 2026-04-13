@@ -21,22 +21,33 @@ public:
     bool gotoLoad(double targetLoad);
     void stopMotor();
 
-    bool isLoadSafe(double targetLoad) const;
     void setSafeLoadRange(double minLoad, double maxLoad);
+    void setMaxStepDelta(double maxDelta);
 
+    bool validateTargetLoad(double targetLoad, std::string& validationError) const;
+    bool emergencyStopIfNeeded(double measuredForce, double emergencyThreshold);
+
+    double getLastCommandedLoad() const;
     std::string getLastErrorMessage() const;
 
 private:
     HMODULE hLib;
     bool loaded;
     bool connected;
+
     double minSafeLoad;
     double maxSafeLoad;
+    double maxStepDelta;
+    double lastCommandedLoad;
+
     std::string lastErrorMessage;
 
     bool loadFunctions();
     void unloadLibrary();
     void setError(const std::string& message);
+
+    bool isLoadSafe(double targetLoad) const;
+    bool isStepDeltaSafe(double targetLoad) const;
 };
 
 #endif

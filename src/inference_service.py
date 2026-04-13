@@ -1,13 +1,13 @@
-# TODO: Get actual data from the ML model, parse is so othat it can
-# appropriately fit in the data array.
-# TODO: We will need to manually git clone the entire ml-model repo, create a
-# small inference ML that can
-# TODO: use the .pth file to generate required data that can then be passed
-# onto data.txt file.
-# TODO: Expected time to take: ~3 hours.
+def write_mock_ml_command(file_path="data.txt"):
+    recommended_load = 8.5
+    confidence = 0.91
+    risk_flag = False
 
-data = [0.82, 32.5, 0.4]
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(f"recommended_load={recommended_load}\n")
+        f.write(f"confidence={confidence}\n")
+        f.write(f"risk_flag={str(risk_flag).lower()}\n")
 
-# Write to file
-with open("data.txt", "w") as f:
-    f.write(" ".join(map(str, data)))
+if __name__ == "__main__":
+    write_mock_ml_command()
+    print("Mock ML command written to data.txt")

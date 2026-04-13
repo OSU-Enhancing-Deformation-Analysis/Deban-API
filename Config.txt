@@ -1,0 +1,10 @@
+dll_path=External control DLL/DebenMT64.dll
+ml_command_file=data.txt
+log_file=deban_api_log.csv
+min_safe_load=0.0
+max_safe_load=25.0
+max_step_delta=5.0
+emergency_stop_force=27.0
+default_wait_ms=1000
+require_operator_approval=true
+minimum_ml_confidence=0.75

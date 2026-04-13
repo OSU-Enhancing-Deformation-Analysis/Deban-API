@@ -1,0 +1,11 @@
+timestamp,event_type,detail,requested_load,measured_force,status
+"2026-04-12 22:02:17","startup","DLL loaded successfully",0,-9999,"success"
+"2026-04-12 22:02:17","connect","Connected to Deben controller",0,-9997,"success"
+"2026-04-12 22:02:26","manual_mode","Target load 1000 N is outside safe range [0, 25] N.",1000,-9997,"rejected"
+"2026-04-12 22:02:32","manual_mode","Target load 1000 N is outside safe range [0, 25] N.",1000,-9997,"rejected"
+"2026-04-12 22:02:39","manual_mode","Requested jump from 0 N to 10 N exceeds max step delta of 5 N.",10,-9997,"rejected"
+"2026-04-12 22:02:50","manual_mode","Manual gotoLoad executed",1,-9997,"success"
+"2026-04-12 22:03:01","automatic_mode","Automatic step executed",1,-9997,"success"
+"2026-04-12 22:03:01","automatic_mode","Automatic sequence completed",1,-9997,"success"
+"2026-04-12 22:03:06","read_force","Read current force",1,-9997,"success"
+"2026-04-12 22:03:11","shutdown","Operator exited menu",1,-9997,"success"
