@@ -1,0 +1,5 @@
+C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/build/CMakeFiles/DebenGui.dir
+C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/build/CMakeFiles/edit_cache.dir
+C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/build/CMakeFiles/rebuild_cache.dir
+C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/build/CMakeFiles/DebenGui_autogen_timestamp_deps.dir
+C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/build/CMakeFiles/DebenGui_autogen.dir

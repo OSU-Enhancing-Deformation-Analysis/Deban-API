@@ -1,0 +1,10 @@
+# ninja log v7
+46	857	7989595644135157	DebenGui_autogen/timestamp	cf3ad0e38f894ce0
+46	857	7989595644135157	DebenGui_autogen/mocs_compilation.cpp	cf3ad0e38f894ce0
+46	857	7989595644135157	C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/build/DebenGui_autogen/timestamp	cf3ad0e38f894ce0
+46	857	7989595644135157	C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/build/DebenGui_autogen/mocs_compilation.cpp	cf3ad0e38f894ce0
+878	2575	7989595644889529	CMakeFiles/DebenGui.dir/src/DebenController.cpp.obj	6e22e6f55b6ef14d
+867	3608	7989595644776440	CMakeFiles/DebenGui.dir/src/GUImain.cpp.obj	37ab502654a24874
+863	3645	7989595644694956	CMakeFiles/DebenGui.dir/DebenGui_autogen/mocs_compilation.cpp.obj	d83ac859c526a1b6
+872	3903	7989595644809901	CMakeFiles/DebenGui.dir/src/MainWindow.cpp.obj	d8ec8ef97778bf5b
+3903	4037	7989595675131695	DebenGui.exe	8a09b6de0385405b
