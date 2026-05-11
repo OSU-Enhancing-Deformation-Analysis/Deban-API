@@ -2,6 +2,7 @@
 C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/src/DebenController.h
 C:/Users/gemma/Desktop/Software Engineering Project/Deban-API/src/MainWindow.h
  mmc:Q_OBJECT
+ mdp:C:/Qt/6.11.0/mingw_64/include/QtCore/QString
  mdp:C:/Qt/6.11.0/mingw_64/include/QtCore/q17memory.h
  mdp:C:/Qt/6.11.0/mingw_64/include/QtCore/q20bit.h
  mdp:C:/Qt/6.11.0/mingw_64/include/QtCore/q20functional.h

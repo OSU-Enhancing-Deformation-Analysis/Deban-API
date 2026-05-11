@@ -75,3 +75,7 @@ timestamp,event_type,detail,requested_load,measured_force,status
 "2026-04-12 22:44:16","automatic_mode","Automatic step executed",9.9,-9997,"success"
 "2026-04-12 22:44:16","automatic_mode","Automatic sequence completed",9.9,-9997,"success"
 "2026-04-12 22:44:56","manual_mode","Target load 9999 N is outside safe range [0, 25] N.",9999,-9997,"rejected"
+timestamp,event_type,detail,requested_load,measured_force,status
+"2026-05-08 12:06:47","startup","DLL loaded successfully",0,-9999,"success"
+"2026-05-08 12:06:47","connect","Connected to Deben controller",0,-0.0016,"success"
+"2026-05-08 12:07:08","shutdown","Operator exited menu",0,59.66,"success"
